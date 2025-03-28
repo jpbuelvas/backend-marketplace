@@ -3,12 +3,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { UsersModule } from './users/user.module';
 import { ProductsModule } from './products/products.module';
-import { CartModule } from './cart/cart.module';
 import { AuthModule } from './auth/auth.module.ts';
 import { WompiModule } from './wompi/wompi.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -25,9 +25,9 @@ import { AppService } from './app.service';
     }),
     UsersModule,
     ProductsModule,
-    CartModule,
     AuthModule,
     WompiModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

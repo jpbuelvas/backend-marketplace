@@ -15,4 +15,6 @@ export class CreateProductDto {
   @ApiProperty({ example: 10.99 })
   @IsNumber()
   price: number;
+  @ApiProperty({ example: 'http://example.com/image.jpg' })
+  imageURL: string;
 }

@@ -7,7 +7,7 @@ import { AuthModule } from '../auth/auth.module.ts'; // Importa AuthModule
 import { UsersModule } from 'src/users/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product]), AuthModule, UsersModule], // Agrega AuthModule aquí
+  imports: [TypeOrmModule.forFeature([Product]), AuthModule, UsersModule], 
   controllers: [ProductsController],
   providers: [ProductsService],
   exports: [ProductsService],

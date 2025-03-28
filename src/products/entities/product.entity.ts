@@ -25,6 +25,9 @@ export class Product {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
+  @Column({ nullable: true })
+  ImageURL: string;
+
   // Relación con User (vendedor). Un usuario puede tener varios productos
   @ManyToOne(() => User, { eager: true })
   owner: User;
