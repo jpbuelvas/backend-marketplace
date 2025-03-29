@@ -9,6 +9,11 @@ import {
 import { User } from '../../users/entities/user.entity';
 import { OrderItem } from './order-item.entity';
 
+export enum OrderStatus {
+  PENDING = 'pending',
+  CANCELEND = 'canceled',
+  CONFIRMED = 'confirmed',
+}
 @Entity()
 export class Order {
   @PrimaryGeneratedColumn()
@@ -27,10 +32,16 @@ export class Order {
   })
   items: OrderItem[];
 
+  @Column({ nullable: true })
+  transactionId: string;
+
   @Column('decimal', { precision: 10, scale: 2 })
   total: number;
 
-  @Column({ default: 'pending' })
+  @Column({ nullable: true })
+  address?: string;
+
+  @Column({ default: OrderStatus.PENDING })
   status: string;
 
   @CreateDateColumn()

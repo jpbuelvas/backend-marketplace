@@ -9,25 +9,31 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    PassportModule,
-    ConfigModule, // Asegúrate de importar ConfigModule aquí también
+    // Módulo para cargar variables de entorno
+    ConfigModule,
+
+    // Módulo Passport para la estrategia JWT
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+
+    // Configuración asíncrona del JwtModule
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        // Aquí puedes acceder a las variables de entorno usando configService
         return {
-          secret: configService.get<string>('JWT_SECRET'),
+          secret: configService.get<string>('JWT_SECRET') || 'mysecretkey',
           signOptions: {
-            expiresIn: configService.get<string>('JWT_EXPIRATION'),
+            expiresIn: configService.get<string>('JWT_EXPIRATION') || '1h',
           },
         };
       },
     }),
+
+    // Módulo de usuarios
     UsersModule,
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
-  exports: [JwtModule, AuthService],
+  exports: [AuthService], // Exporta el AuthService si lo usas en otros módulos
 })
 export class AuthModule {}

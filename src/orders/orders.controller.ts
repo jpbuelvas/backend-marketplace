@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard.service';
+import { JwtAuthGuard } from '../auth/jwt-auth-guard';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -19,18 +19,22 @@ import { UserRole } from 'src/users/entities/user.entity';
 
 @ApiTags('orders')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('orders')
 export class OrdersController {
   constructor(private ordersService: OrdersService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Crear un pedido' })
   @ApiResponse({ status: 201, description: 'Pedido creado correctamente' })
-  async createOrder(@Body() createOrderDto: CreateOrderDto, @Request() req) {
-    // req.user debe contener la información del comprador (buyer)
+  async createOrder(
+    @Body()
+    createOrderDto: CreateOrderDto,
+    @Request() req,
+  ) {
     return this.ordersService.createOrder(createOrderDto, req.user);
   }
+
   @Get()
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)

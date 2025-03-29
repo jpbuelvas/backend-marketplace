@@ -8,6 +8,7 @@ export class WompiController {
 
   @Get('transaction-status')
   getTransactionStatus(@Query() transactionId: TransactionIdDTO) {
+    console.log(transactionId, 'transactionId');
     return this.wompiService.getTransactionStatus(transactionId.id);
   }
 

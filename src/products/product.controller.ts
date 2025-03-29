@@ -19,7 +19,7 @@ import { extname } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard.service';
+import { JwtAuthGuard } from '../auth/jwt-auth-guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../guards/roles.guard';
 import { UserRole } from '../users/entities/user.entity';
@@ -84,7 +84,6 @@ export class ProductsController {
   async getAllProducts() {
     return this.productsService.getAllProducts();
   }
-  @UseGuards(JwtAuthGuard)
   @Get('filter')
   async findAllSearch(@Query() query) {
     return this.productsService.findAllSearch(query);

@@ -1,4 +1,4 @@
-// src/auth/auth.service.ts
+// auth.service.ts
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -11,19 +11,19 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  // Verifica credenciales
   async validateUser(email: string, pass: string) {
     const user = await this.usersService.findByEmail(email);
     if (user && (await bcrypt.compare(pass, user.password))) {
-      // Omite el password para mayor seguridad
-      const { ...result } = user;
-      return result;
+      const rest = user;
+      return rest;
     }
-    throw new UnauthorizedException();
+    throw new UnauthorizedException('Credenciales inválidas');
   }
 
+  // Genera el token
   async login(user: any) {
     const payload = { email: user.email, sub: user.id, role: user.role };
-    console.log('Payload:', payload);
     return {
       access_token: this.jwtService.sign(payload),
       email: user.email,

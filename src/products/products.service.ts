@@ -2,8 +2,9 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -72,12 +73,15 @@ export class ProductsService {
     });
   }
   async getAllProducts(): Promise<Product[]> {
-    return this.productsRepository.find();
+    return this.productsRepository.find({
+      where: {
+        quantity: MoreThan(0),
+      },
+    });
   }
 
   async findAllSearch(filters?: any): Promise<Product[]> {
     const query = this.productsRepository.createQueryBuilder('product');
-
     if (filters.name) {
       query.andWhere('product.name ILIKE :name', { name: `%${filters.name}%` });
     }
@@ -94,7 +98,7 @@ export class ProductsService {
         maxPrice: filters.maxPrice,
       });
     }
-    return query.getMany();
+    return query.where('quantity > :quantity', { quantity: 0 }).getMany();
   }
 
   async findById(id: number): Promise<Product> {
@@ -109,6 +113,9 @@ export class ProductsService {
     newquantity: number,
   ): Promise<Product> {
     const product = await this.findById(id);
+    if (newquantity === undefined || newquantity === null) {
+      throw new BadRequestException('La nueva cantidad debe estar definida');
+    }
     if (product.quantity < newquantity) {
       throw new ForbiddenException('No hay suficiente stock');
     }
@@ -127,6 +134,7 @@ export class ProductsService {
   ): Promise<Product> {
     const product = await this.findById(id);
     // Verifica que el usuario sea el propietario del producto
+
     if (product.owner.id !== (user?.sub || user?.id)) {
       throw new ForbiddenException(
         'No tienes permiso para editar este producto',

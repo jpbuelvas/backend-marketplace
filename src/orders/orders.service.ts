@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Order } from './entities/order.entity';
+import { Order, OrderStatus } from './entities/order.entity';
 import { OrderItem } from './entities/order-item.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ProductsService } from '../products/products.service';
@@ -25,13 +25,25 @@ export class OrdersService {
     createOrderDto: CreateOrderDto,
     buyer: User,
   ): Promise<Order> {
+    // Si se envía un transactionId, verificamos que no exista ya una orden con ese ID.
+    if (createOrderDto.transactionId) {
+      const existingOrder = await this.orderRepository.findOne({
+        where: { transactionId: createOrderDto.transactionId },
+      });
+      if (existingOrder) {
+        throw new BadRequestException(
+          'Ya existe un pedido con este transactionId, no se puede crear un duplicado.',
+        );
+      }
+    }
+
     let total = 0;
     const orderItems: OrderItem[] = [];
     let seller: User = null; // Suponemos que todos los productos pertenecen al mismo vendedor.
 
     // Itera sobre cada item del pedido.
     for (const item of createOrderDto.items) {
-      // Obtén el producto. (Asegúrate de que ProductsService tenga un método findById)
+      // Se asume que en el DTO el id del producto se envía en la propiedad "productId".
       const product = await this.productsService.findById(item.productId);
       if (!product) {
         throw new NotFoundException(`Producto ${item.productId} no encontrado`);
@@ -42,7 +54,7 @@ export class OrdersService {
         );
       }
 
-      // Si es el primer producto, asigna el vendedor.
+      // Asignar el vendedor (suponiendo que todos los productos sean del mismo vendedor)
       if (!seller) {
         seller = product.owner;
       } else if (seller && product.owner.id !== seller.id) {
@@ -70,13 +82,15 @@ export class OrdersService {
       orderItems.push(orderItem);
     }
 
-    // Crea el pedido.
+    // Crea el pedido con el transactionId y address (si se envían en el DTO)
     const order = this.orderRepository.create({
       buyer,
       seller,
       items: orderItems,
       total,
-      status: 'pending',
+      status: OrderStatus.PENDING,
+      transactionId: createOrderDto.transactionId,
+      address: createOrderDto.address,
     });
 
     return this.orderRepository.save(order);
@@ -86,15 +100,15 @@ export class OrdersService {
     const ownerId = user.sub || user.id; // Usa 'sub' si existe, sino 'id'
     return this.orderRepository.find({
       where: { seller: { id: ownerId } }, // Indica la relación por el ID
-      relations: ['seller'], // Carga la relación seller
+      relations: ['seller', 'buyer'],
     });
   }
 
   async findAllByBuyer(user: any): Promise<Order[]> {
     const ownerId = user.sub || user.id; // Usa 'sub' si existe, sino 'id'
     return this.orderRepository.find({
-      where: { buyer: { id: ownerId } }, // Indica la relación por el ID
-      relations: ['buyer'], // Carga la relación seller
+      where: { seller: { id: ownerId } }, // Indica la relación por el ID
+      relations: ['buyer', 'seller'],
     });
   }
 }

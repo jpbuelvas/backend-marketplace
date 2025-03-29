@@ -21,12 +21,10 @@ export class WompiService {
     currency: string,
   ) {
     const signatureString = `${reference}${amountInCents}${currency}${this.integritySecret}`;
-    console.log(signatureString, 'signatureString');
     const integritySignature = crypto
       .createHash('sha256')
       .update(signatureString)
       .digest('hex');
-    console.log(integritySignature, 'integritySignature');
     return integritySignature;
   }
 
