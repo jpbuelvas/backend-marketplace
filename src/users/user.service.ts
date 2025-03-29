@@ -11,7 +11,7 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const { email, password, confirmPassword, role } = createUserDto;
+    const { email, password, confirmPassword, role, fullname } = createUserDto;
     if (password !== confirmPassword) {
       throw new ConflictException('Las contraseñas no coinciden');
     }
@@ -19,8 +19,14 @@ export class UserService {
     if (existing) {
       throw new ConflictException('El usuario ya existe');
     }
+    console.log(email, password, role, fullname);
     const hash = await bcrypt.hash(password, 10);
-    const user = this.usersRepository.create({ email, password: hash, role });
+    const user = this.usersRepository.create({
+      email,
+      password: hash,
+      role,
+      fullname,
+    });
     return this.usersRepository.save(user);
   }
 
