@@ -40,7 +40,6 @@ export class ProductsService {
     if (existingProduct) {
       throw new BadRequestException('El SKU ya está en uso por otro producto');
     }
-    console.log(existingProduct, 'existingProduct');
     // Crea el producto incluyendo la URL de la imagen (puede ser null si no se envió)
     const product = this.productsRepository.create({
       ...createProductDto,
