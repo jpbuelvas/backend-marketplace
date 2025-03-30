@@ -35,24 +35,24 @@ Este proyecto es un **Marketplace** desarrollado con **NestJS** que integra func
 3. **Configurar variables de entorno:**  
 Crea un archivo .env en la raíz del proyecto con el siguiente contenido (ajusta los valores según tu entorno):
   # Configuración de la Base de Datos (Postgres)
-  DB_HOST=localhost
-  DB_PORT=5432
-  DB_USER=postgres
-  DB_PASS=123
-  DB_NAME=postgres
+  - DB_HOST=localhost
+  - DB_PORT=5432
+  - DB_USER=postgres
+  - DB_PASS=123
+  - DB_NAME=postgres
 
   # Configuración de Wompi
-  WOMPI_INTEGRITY_SECRET=
-  WOMPI_PRIVATE_KEY=
+  - WOMPI_INTEGRITY_SECRET=
+  - WOMPI_PRIVATE_KEY=
 
   # Configuración del Backend para el guardado de archivos
   BASE_URL=http://localhost:3000
 
   # Configuración de JWT
-  JWT_SECRET=
-  JWT_EXPIRATION=1h
-  JWT_REFRESH_SECRET=
-  JWT_REFRESH_EXPIRATION=
+  - JWT_SECRET=
+  - JWT_EXPIRATION=1h
+  - JWT_REFRESH_SECRET=
+  - JWT_REFRESH_EXPIRATION=
 
 ## Uso
   Ejecución de la Aplicación
@@ -164,13 +164,13 @@ Cuerpo de la solicitud: Objeto JSON conforme al DTO CreateUserDto que incluye:
 ## Pruebas Unitarias
 El proyecto utiliza Jest para la ejecución de pruebas unitarias. Se han creado test suites para:
 
-UserController y UserService: Validan el proceso de registro de usuarios y la lógica de negocio asociada.
+- UserController y UserService: Validan el proceso de registro de usuarios y la lógica de negocio asociada.
 
-WompiController y WompiService: Verifican el correcto funcionamiento de los endpoints y la lógica de negocio para la integración con Wompi.
+- WompiController y WompiService: Verifican el correcto funcionamiento de los endpoints y la lógica de negocio para la integración con Wompi.
 
-ProductController y ProductService (según la implementación de productos).
+- ProductController y ProductService (según la implementación de productos).
 
-CreateUserDto: Comprueba la validación de datos mediante class-validator.
+- CreateUserDto: Comprueba la validación de datos mediante class-validator.
 
 Para ejecutar las pruebas, utiliza el siguiente comando:
 
