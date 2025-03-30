@@ -62,7 +62,6 @@ export class ProductsController {
     const baseUrl = this.configService.get<string>('BASE_URL');
 
     const imageUrl = file ? `${baseUrl}/uploads/${file.filename}` : null;
-
     const product = await this.productsService.createWithImage(
       createProductDto,
       req.user,
@@ -132,7 +131,7 @@ export class ProductsController {
     // Si se envía un archivo, agrega la URL generada al DTO
     if (file) {
       const baseUrl = this.configService.get<string>('BASE_URL');
-      updateProductDto.imageUrl = `${baseUrl}/uploads/${file.filename}`;
+      updateProductDto.ImageURL = `${baseUrl}/uploads/${file.filename}`;
     }
     // Si se envía el campo "user" como string JSON en el FormData, parsearlo
     if (updateProductDto.user) {

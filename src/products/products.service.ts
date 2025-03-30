@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { User, UserRole } from '../users/entities/user.entity';
 import { UserService } from '../users/user.service';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -28,12 +29,18 @@ export class ProductsService {
         'Solo los vendedores pueden crear productos',
       );
     }
-
     // Obtén la entidad completa del usuario desde la base de datos
-    const owner = await this.usersService.findOne(ownerPayload.sub);
+    const owner = await this.usersService.findOne(ownerPayload.id);
     if (!owner) {
       throw new NotFoundException('Usuario no encontrado');
     }
+    const existingProduct = await this.productsRepository.findOne({
+      where: { sku: createProductDto.sku },
+    });
+    if (existingProduct) {
+      throw new BadRequestException('El SKU ya está en uso por otro producto');
+    }
+    console.log(existingProduct, 'existingProduct');
     // Crea el producto incluyendo la URL de la imagen (puede ser null si no se envió)
     const product = this.productsRepository.create({
       ...createProductDto,
@@ -129,7 +136,7 @@ export class ProductsService {
   // Método para actualizar producto
   async updateProduct(
     id: number,
-    updateProductDto: any,
+    updateProductDto: UpdateProductDto,
     user: any,
   ): Promise<Product> {
     const product = await this.findById(id);
@@ -140,6 +147,7 @@ export class ProductsService {
         'No tienes permiso para editar este producto',
       );
     }
+
     const updatedProduct = await this.productsRepository.preload({
       id,
       ...updateProductDto,

@@ -16,5 +16,5 @@ export class CreateProductDto {
   @IsNumber()
   price: number;
   @ApiProperty({ example: 'http://example.com/image.jpg' })
-  imageURL: string;
+  ImageURL: string;
 }
