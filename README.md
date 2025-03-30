@@ -65,32 +65,35 @@ Crea un archivo .env en la raíz del proyecto con el siguiente contenido (ajusta
   Desde allí podrás explorar y probar cada uno de los endpoints definidos.
 
 ## Estructura del Proyecto
-src/
-├── products/
-│   ├── product.controller.spec.ts
-│   ├── product.controller.ts
-│   ├── product.service.spec.ts
-│   ├── product.service.ts
-│   └── product.module.ts
-├── users/
-│   ├── dto/
-│   │   └── create-user.dto.ts
-│   ├── user.controller.spec.ts
-│   ├── user.controller.ts
-│   ├── user.service.spec.ts
-│   ├── user.service.ts
-│   └── user.module.ts
-├── wompi/
-│   ├── dto/
-│   │   └── wompi.dto.ts
-│   ├── wompi.controller.spec.ts
-│   ├── wompi.controller.ts
-│   ├── wompi.service.spec.ts
-│   ├── wompi.service.ts
-│   └── wompi.module.ts
-├── app.controller.ts
-├── app.service.ts
-├── app.module.ts
+```
+  src/
+  ├── products/
+  │   ├── product.controller.spec.ts
+  │   ├── product.controller.ts
+  │   ├── product.service.spec.ts
+  │   ├── product.service.ts
+  │   └── product.module.ts
+  ├── users/
+  │   ├── dto/
+  │   │   └── create-user.dto.ts
+  │   ├── user.controller.spec.ts
+  │   ├── user.controller.ts
+  │   ├── user.service.spec.ts
+  │   ├── user.service.ts
+  │   └── user.module.ts
+  ├── wompi/
+  │   ├── dto/
+  │   │   └── wompi.dto.ts
+  │   ├── wompi.controller.spec.ts
+  │   ├── wompi.controller.ts
+  │   ├── wompi.service.spec.ts
+  │   ├── wompi.service.ts
+  │   └── wompi.module.ts
+  ├── app.controller.ts
+  ├── app.service.ts
+  ├── app.module.ts
+  ```
+  
 Además, en la raíz del proyecto se encuentran archivos de configuración como .eslintrcjs, .prettierrc, jest.config.js, nest-cli.json, tsconfig.build.json, tsconfig.json, así como los archivos de dependencias (package.json, package-lock.json).
 ## Endpoints
 Los endpoints para productos se definen en product.controller.ts. Algunos ejemplos (los tuyos pueden variar según la implementación):
